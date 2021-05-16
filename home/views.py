@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View
 from .models import *
+from django.contrib.auth.models import User
+from django.contrib import messages
 
 class BaseView(View):
     views = {}
@@ -35,3 +37,33 @@ class ItemDetailView(BaseView):
     def get(self, request, slug):
         self.views['items_details'] = Item.objects.filter(slug=slug)
         return render(request, 'product-list.html', self.views)
+
+def signup(request):
+    if request.method == "POST":
+        f_name = request.POST['f_name']
+        l_name = request.POST['l_name']
+        email = request.POST['email']
+        username = request.POST['username']
+        password = request.POST['password']
+        cpassword = request.POST['cpassword']
+        if password == cpassword:
+            if User.objects.filter(username = username).exists():
+                messages.error(request,'This username is already taken')
+                return redirect('home:signup')
+            elif User.objects.filter(email = email).exists():
+                messages.error(request,'This email is already taken')
+                return redirect('home:signup')
+            else:
+                user = User.objects.create_user(
+                    username = username,
+                    email = email,
+                    first_name = f_name,
+                    last_name = l_name,
+                )
+                user.save()
+                messages.success(request,'You are sucesfully registered.')
+                return redirect('home:signup')
+        else:
+            messages.error(request, 'This password doesnt match')
+            return redirect('home:signup')
+    return render(request,'signup.html')
