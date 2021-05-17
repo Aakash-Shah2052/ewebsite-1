@@ -49,3 +49,6 @@ class Item(models.Model):
     slug = models.CharField(max_length=300)
     def __str__(self):
         return self.name
+
+    def add_to_cart(self,kwargs):
+        return reverse('cart:add-to-cart',kwargs = {'slug':slug})
