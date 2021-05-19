@@ -9,7 +9,6 @@ class BaseView(View):
     views['category'] = Category.objects.filter(status='active')
 class HomeView(BaseView):
     def get(self,request):
-
         self.views['sliders'] = Slider.objects.filter(status = 'active')
         self.views['ads'] = Ad.objects.all()
         self.views['brands'] = Brand.objects.filter(status = 'active')
