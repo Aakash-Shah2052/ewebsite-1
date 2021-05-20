@@ -3,6 +3,8 @@ from django.views.generic import View
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib import auth
+from django.contrib.auth import authenticate, login
 
 class BaseView(View):
     views = {}
@@ -66,3 +68,18 @@ def signup(request):
             messages.error(request, 'This password doesnt match')
             return redirect('home:signup')
     return render(request,'signup.html')
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST('username')
+        password = request.POST('password')
+
+        user = auth.authenticate(username = username,password = password)
+        if user is not None:
+            auth.login(request,user)
+            return redirect('/')
+        else:
+            messages.error(request,'Wrong password or username')
+            return redirect('home:login')
+    return render(request,'login.html')
+
