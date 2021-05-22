@@ -2,6 +2,10 @@ from django.shortcuts import render,redirect
 from home.models import Item
 from .models import Cart
 from home.views import *
+from django.core.mail import EmailMessage
+from django.contrib.auth.decorators import login_required
+
+@login_required()
 
 def add_to_cart(request,slug):
     username = request.user.username
@@ -40,3 +44,26 @@ def delete_cart(request,slug):
     username = request.user.username
     Cart.objects.filter(username=username, checkout=False,slug = slug).delete()
     return redirect('cart:my_cart')
+
+def contact(request):
+    if request.method == "POST":
+         email = request.POST['email']
+         name = request.POST['name']
+         subject = request.POST['subject']
+         message = request.POST['message']
+         contact = Contact.objects.create(
+                name = name,
+                email = email,
+                subject = subject,
+                message = message
+                )
+         contact.save()
+
+         email = EmailMessage(
+             'Hello Aakash Sir',
+             f'{name}\n {email}\n {subject}\n {message}\n',
+             'aakashshah9998@gmail.com',
+             ['aakkuubro1994@gmail.com'],
+         )
+         email.send()
+    return render(request, 'contact.html')
