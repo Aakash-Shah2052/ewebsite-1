@@ -9,5 +9,6 @@ urlpatterns = [
     path('item_detail/<slug>', ItemDetailView.as_view(),name = 'item_detail'),
     path('signup', signup,name = 'signup'),
     path('login', login,name = 'login'),
+    path('api_data', api_data,name = 'api_data'),
 
 ]

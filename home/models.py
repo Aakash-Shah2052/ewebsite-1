@@ -40,7 +40,7 @@ class Item(models.Model):
     name = models.CharField(max_length=400)
     price = models.IntegerField()
     discounted_price = models.IntegerField(default=0)
-    image = models.ImageField(upload_to='media')
+    image = models.ImageField(upload_to='media',null = True)
     status = models.CharField(choices=STATUS, max_length=200)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
